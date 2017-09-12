@@ -1,42 +1,54 @@
 from matplotlib import pyplot as plt
+from matplotlib import cm
 import numpy as np
 
 
+# Calculate the Mandelbrot function
 def mandelbrot(z, c):
     zp = z**2 + c
     return zp
 
-def iterate(c):
-    print c
+# Iterate on each z value with the Mandelbrot function
+# Return true for in the Mandelbrot set, false for not in set
+def iterate(c, xmax):
     counter = 0
-    max = 10
+    max = 100
     zp = mandelbrot(0, c)
-    print zp
-    while abs(zp) <= 2:
+    while abs(zp) <= xmax:
         zp = mandelbrot(zp, c)
-        print zp
         counter += 1
         if counter > max:
-            return True
-    return False
+            return True, max
+    return False, counter
 
-def image(N=10):
-    max = 2
-    min = -2
-    ns = np.linspace(min, max, N)
-    print ns
-    inset = []
-    outset = []
+# Create image using the Mandelbrot fractal using an NxN grid
+def image(N=1000):
+    xmax = 2
+    xmin = -xmax
+    ns = np.linspace(xmin, xmax, N)
+    insetx = []
+    outsetx = []
+    insety = []
+    outsety = []
+    outsetcols = []
     for x in ns:
         for y in ns:
             c = complex(x, y)
-            man = iterate(c)
+            man, num = iterate(c, xmax)
+
             if man:
-                inset.append([x,y])
+                insetx.append(x)
+                insety.append(y)
             else:
-                outset.append([x,y])
-    plt.plot(inset, marker='.', linestyle='', color='black')
-    plt.plot(outset, marker='.', linestyle='', color='cyan')
+                outsetx.append(x)
+                outsety.append(y)
+                outsetcols.append(num)
+
+    plt.scatter(insetx, insety, marker='.', edgecolor='', c='black')
+    plt.scatter(outsetx, outsety, marker='.', edgecolor='', c=outsetcols, cmap=cm.plasma)
+
+    plt.xlim(-2, 2)
+    plt.ylim(-2, 2)
     plt.show()
 
 
