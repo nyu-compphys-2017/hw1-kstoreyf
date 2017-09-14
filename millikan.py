@@ -18,10 +18,16 @@ Exy = 1/N * np.sum(freqs*volts)
 
 m = (Exy - Ex*Ey)/(Exx - Ex**2)
 c = (Exx*Ey - Ex*Exy)/(Exx - Ex**2)
-print m
-print c
+print 'Slope: ', m
+print 'Intercept: ', c
 
-plt.plot(freqs, volts, marker='.', linestyle='')
+ys_lstsqs = []
+for f in freqs:
+    y = m*f + c
+    ys_lstsqs.append(y)
+
+plt.plot(freqs, volts, marker='o', linestyle='', color='cyan', markeredgewidth=0)
+plt.plot(freqs, ys_lstsqs, marker='', linestyle='-', color='purple')
 plt.xlabel('Frequency (Hz)')
 plt.ylabel('Voltage (V)')
 plt.show()
